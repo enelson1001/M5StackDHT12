@@ -1,0 +1,6 @@
+[submodule "externals/gui-lvgl/lvgl"]
+	path = externals/gui-lvgl/lvgl
+	url = https://github.com/littlevgl/lvgl.git
+[submodule "externals/smooth/Smooth"]
+	path = externals/smooth/Smooth
+	url = https://github.com/PerMalmberg/Smooth.git
