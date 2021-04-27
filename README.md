@@ -43,9 +43,11 @@ The Temperature Hourly Log View
 The Time and Date View
 ![Time and Date View](photos/time_and_date_view.jpg)
 
-## Versions
-v1.0 - initial release
-v2.0 - update to lvgl v7.11.0 commit ec9de51 - March 16, 2021
-     - update to Smooth master commit 5578b8b - April 15, 2021 
-     - update to esp-idf v4.3-beta3 commit e9cf9e2 - April 14, 2021
-     - added SDCard, read wifi credentials from sdcard
+# Versions
+### v1.0 : 
+- initial release
+### v2.0 : 
+- update to lvgl v7.11.0 commit ec9de51 - March 16, 2021
+- update to Smooth master commit 5578b8b - April 15, 2021 
+- update to esp-idf v4.3-beta3 commit e9cf9e2 - April 14, 2021
+- added SDCard, read wifi credentials from sdcard
