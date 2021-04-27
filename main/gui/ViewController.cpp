@@ -83,8 +83,8 @@ namespace redstone
 
         // create menu pane
         menu_pane.initialize();
-        menu_pane.add_menu_button(MenuPane::LeftButtonID, std::make_unique<GuiButtonPrev>(*this), std::make_unique<HwPushButton>(GPIO_NUM_39, false, false));
-        menu_pane.add_menu_button(MenuPane::RightButtonID, std::make_unique<GuiButtonNext>(*this), std::make_unique<HwPushButton>(GPIO_NUM_37, false, false));
+        menu_pane.add_menu_button(MenuPane::LeftButtonID, std::make_unique<GuiButtonPrev>(*this), std::make_unique<HwPushButton>(GPIO_NUM_39, true, false)); 
+        menu_pane.add_menu_button(MenuPane::RightButtonID, std::make_unique<GuiButtonNext>(*this), std::make_unique<HwPushButton>(GPIO_NUM_37, true, false));
         menu_pane.create(LV_HOR_RES, 40);
         menu_pane.show();  // only need to do this once since we never change the menu pane
 

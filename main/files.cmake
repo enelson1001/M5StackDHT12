@@ -37,7 +37,6 @@ set(SOURCES
         gui/CPTimeAndDate.cpp
         gui/CPTimeAndDate.h
 
-        sntp/WifiSsidPasswd.h
         sntp/SntpTask.cpp
         sntp/SntpTask.h
         sntp/TimeValue.h
@@ -45,5 +44,11 @@ set(SOURCES
         model/Dht12Task.cpp
         model/Dht12Task.h
         model/EnvirValue.h
+
+        storage/DataStore.cpp
+        storage/DataStore.h
+
+        network/Wifi.cpp
+        network/Wifi.h
         )
 

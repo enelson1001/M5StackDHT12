@@ -47,11 +47,10 @@ namespace redstone
         Log::info(TAG, "Creating the Menu Pane");
 
         // create style for the menu pane container
-        lv_style_copy(&menu_style, &lv_style_plain);
-        menu_style.body.main_color = lv_color_hex3(0x036);
-        menu_style.body.grad_color = lv_color_hex3(0x036);
-        menu_style.text.font = &lv_font_roboto_12;
-        menu_style.text.color = LV_COLOR_WHITE;
+        lv_style_init(&menu_style);
+        lv_style_set_bg_color(&menu_style, LV_STATE_DEFAULT, lv_color_hex3(0x036));
+        lv_style_set_border_width(&menu_style, LV_STATE_DEFAULT, 0);
+        lv_style_set_radius(&menu_style, LV_STATE_DEFAULT, 0);
 
         // create a container to hold the menu buttons
         menu_pane_container = lv_cont_create(lv_scr_act(), NULL);
@@ -59,7 +58,7 @@ namespace redstone
         lv_obj_set_size(menu_pane_container, 320, 40);
         lv_cont_set_layout(menu_pane_container, LV_LAYOUT_OFF);
         lv_obj_align(menu_pane_container, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, 0);
-        lv_cont_set_style(menu_pane_container, LV_CONT_STYLE_MAIN, &menu_style);
+        lv_obj_add_style(menu_pane_container, LV_CONT_PART_MAIN, &menu_style);
         lv_obj_set_hidden(menu_pane_container, true);
 
         // create left button
@@ -104,7 +103,7 @@ namespace redstone
     int MenuPane::read_hardware_buttons()
     {
         int btn_id = NoButtonPressed;
-        
+
         for (auto const& x:hw_buttons)
         {
             if (x.second->is_button_pressed())
@@ -114,7 +113,7 @@ namespace redstone
             }
         }
 
-        return btn_id;;
+        return btn_id;
     }
 
     // Button read callback for the Lvgl input driver

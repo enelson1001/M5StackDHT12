@@ -2,6 +2,7 @@
  * GuiButtonPrev.h - A class that creates a PREV gui button
  *
  * Created on Jan. 04, 2020
+ * Modified on March 02, 2021 - Updated to lvgl to v7.10, moved button style to GuiButton class
  * Copyright (c) 2019 Ed Nelson (https://github.com/enelson1001)
  * Licensed under MIT License (see LICENSE file)
  *
@@ -38,6 +39,5 @@ namespace redstone
 
         private:
             ViewController& view_controller;
-            lv_style_t gui_btn_style;
     };
 }

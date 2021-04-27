@@ -2,6 +2,7 @@
  * GuiButton.h - A base class that GUI buttons implement
  *
  * Created on Jan. 04, 2020
+ * Modified on March 02, 2021 - Updated to lvgl to v7.10
  * Copyright (c) 2019 Ed Nelson (https://github.com/enelson1001)
  * Licensed under MIT License (see LICENSE file)
  *
@@ -59,5 +60,21 @@ namespace redstone
     lv_area_t GuiButton::get_coords()
     {
         return gui_button->coords;
+    }
+
+    // Create button style
+    void GuiButton::create_button_style()
+    {
+        // create style for button
+        lv_style_init(&gui_btn_style);
+        lv_style_set_bg_color(&gui_btn_style, LV_STATE_DEFAULT, lv_color_hex3(0x006));
+        lv_style_set_bg_opa(&gui_btn_style, LV_STATE_DEFAULT, LV_OPA_COVER);
+        lv_style_set_border_width(&gui_btn_style, LV_STATE_DEFAULT, 0);
+        lv_style_set_radius(&gui_btn_style, LV_STATE_DEFAULT, 5);
+        lv_style_set_text_color(&gui_btn_style, LV_STATE_DEFAULT, LV_COLOR_WHITE);
+        lv_style_set_text_font(&gui_btn_style, LV_STATE_DEFAULT, &lv_font_montserrat_12);
+
+        // use different color for button pressed state
+        lv_style_set_bg_color(&gui_btn_style, LV_STATE_PRESSED, lv_color_hex3(0x33f));
     }
 }

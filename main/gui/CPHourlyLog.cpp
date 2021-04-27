@@ -1,7 +1,8 @@
 /****************************************************************************************
  * CPHourlyLog.cpp - A content pane that displays a temperature chart
- * 
+ *
  * Created on Jan. 04, 2020
+ * Modified on March 02, 2021 - Updated to lvgl to v7.10
  * Copyright (c) 2019 Ed Nelson (https://github.com/enelson1001)
  * Licensed under MIT License (see LICENSE file)
  *
@@ -53,53 +54,81 @@ namespace redstone
     {
         Log::info(TAG, "Creating CPHourlyLog");
 
-        // create style for the content container
-        lv_style_copy(&content_container_style, &lv_style_plain);
-        content_container_style.body.main_color = lv_color_hex3(0xaaa);
-        content_container_style.body.grad_color = lv_color_hex3(0xaaa);
+        // create a plain style
+        lv_style_init(&plain_style);
+        lv_style_set_pad_top(&plain_style, LV_STATE_DEFAULT, 0);
+        lv_style_set_pad_bottom(&plain_style, LV_STATE_DEFAULT, 0);
+        lv_style_set_pad_left(&plain_style, LV_STATE_DEFAULT, 0);
+        lv_style_set_pad_right(&plain_style, LV_STATE_DEFAULT, 0);
+        lv_style_set_line_opa(&plain_style, LV_STATE_DEFAULT, 0);
+        lv_style_set_pad_inner(&plain_style, LV_STATE_DEFAULT, 0);
+        lv_style_set_margin_all(&plain_style, LV_STATE_DEFAULT, 0);
+        lv_style_set_border_width(&plain_style, LV_STATE_DEFAULT, 0);
+        lv_style_set_radius(&plain_style, LV_STATE_DEFAULT, 0);
 
-        // create style for temperature chart
-        lv_style_copy(&temperature_chart_style, &lv_style_plain);
-        temperature_chart_style.text.font = &lv_font_roboto_12;
-        temperature_chart_style.text.color = lv_color_hex3(0x606);
-        temperature_chart_style.body.border.width = 2;  
-        temperature_chart_style.line.width = 1;
+        // create a style for the content container
+        lv_style_copy(&content_container_style, &plain_style);
+        lv_style_set_bg_color(&content_container_style, LV_STATE_DEFAULT, lv_color_hex3(0xaaa));
+
+        // create style for the chart background
+        // set pad left so ticks and labels are displayed on left side of chart
+        // set pad right so "hr" on bottom right side tick is displayed completely
+        // set pad bottom so ticks and labels are displayed on bottom of chart
+        // set text color to black
+        // set text font to size 10
+        // set border width to 0 to reduce size of chart
+        // set background opa to transparent so ticks and labels are diplayed on content container background
+        lv_style_init(&chart_bg_style);
+        lv_style_set_pad_left(&chart_bg_style, LV_STATE_DEFAULT, 40);
+        lv_style_set_pad_right(&chart_bg_style, LV_STATE_DEFAULT, 10);
+        lv_style_set_pad_bottom(&chart_bg_style, LV_STATE_DEFAULT, 30);
+        lv_style_set_text_color(&chart_bg_style, LV_STATE_DEFAULT, LV_COLOR_BLACK);
+        lv_style_set_text_font(&chart_bg_style, LV_STATE_DEFAULT, &lv_font_montserrat_10);
+        lv_style_set_border_width(&chart_bg_style, LV_STATE_DEFAULT, 0);
+        lv_style_set_bg_opa(&chart_bg_style, LV_STATE_DEFAULT, LV_OPA_TRANSP);
+
+        // create style for the series background
+        // set background color to white
+        // set background opa to cover so white background is displayed over content container background
+        // set border width to 2 pixels
+        // set border color to black
+        lv_style_init(&series_bg_style);
+        lv_style_set_bg_color(&series_bg_style, LV_STATE_DEFAULT, LV_COLOR_WHITE);
+        lv_style_set_bg_opa(&series_bg_style, LV_STATE_DEFAULT, LV_OPA_COVER);
+        lv_style_set_border_width(&series_bg_style, LV_STATE_DEFAULT, 2);
+        lv_style_set_border_color(&series_bg_style, LV_STATE_DEFAULT, LV_COLOR_BLACK);
+
+        // create a style for the series
+        // set radius of points on line chart
+        lv_style_init(&series_style);
+        lv_style_set_size(&series_style, LV_STATE_DEFAULT, 1);
 
         // create a content container
         content_container = lv_cont_create(lv_scr_act(), NULL);
         lv_obj_set_size(content_container, width, height);
         lv_obj_align(content_container, NULL, LV_ALIGN_CENTER, 0, 0);
-        lv_cont_set_style(content_container, LV_CONT_STYLE_MAIN, &content_container_style);
+        lv_obj_add_style(content_container, LV_CONT_PART_MAIN, &content_container_style);
         lv_obj_set_hidden(content_container, true);
 
         // create the temperature chart
         temperature_chart = lv_chart_create(content_container, NULL);
-        lv_chart_set_style(temperature_chart, LV_CHART_STYLE_MAIN, &temperature_chart_style);
+        lv_obj_add_style(temperature_chart, LV_CHART_PART_BG, &chart_bg_style);
+        lv_obj_add_style(temperature_chart, LV_CHART_PART_SERIES_BG, &series_bg_style);
+        lv_obj_add_style(temperature_chart, LV_CHART_PART_SERIES, &series_style);
 
-        // create a margin for text labels
-        lv_chart_set_margin(temperature_chart, 42);
+        // set size of chart to fit content pane almost completely for best look
+        lv_obj_set_size(temperature_chart, 260, 140);
 
-        // The x-axis of 219 = 2*2px (border) + 23*1px (23 inside tick marks) + 24*8px (24 spaces between tick marks, space = 8px)
-        // The y-axis of 103 = 2*2px (border) + 19*1px (19 inside tick marks) + 20*4px (20 spaces between tick marks, space = 4px)
-        // Even though size calculates out to be width=219 and height=103 you need to set size to 217,101 else points are off by 1px
-        lv_obj_set_size(temperature_chart, 217, 101);
-
-        // Offset chart to fit content pane better
-        lv_obj_align(temperature_chart, NULL, LV_ALIGN_CENTER, 20, -10);
+        // Center chart in content pane
+        lv_obj_align(temperature_chart, NULL, LV_ALIGN_CENTER, 0, 0);
 
         // Show lines and points
-        lv_chart_set_type(temperature_chart, LV_CHART_TYPE_POINT | LV_CHART_TYPE_LINE);
+        lv_chart_set_type(temperature_chart, LV_CHART_TYPE_LINE);
 
-        // The opacity of the chart
-        lv_chart_set_series_opa(temperature_chart, LV_OPA_70);
-
-        // The chart will use update mode circular                      
+        // The chart will use update mode circular
         lv_chart_set_update_mode(temperature_chart, LV_CHART_UPDATE_MODE_CIRCULAR);
 
-        // The line width is 2px and point radius is 2px - has no effect if temperature_chart_style has style.line.width = 1
-        lv_chart_set_series_width(temperature_chart, 2); 
-
-        // The 3 horizontal division lines will line up with 65F, 70F, 75F and 80F.  
+        // The 3 horizontal division lines will line up with 65F, 70F, 75F and 80F.
         // The 5 vertical divsion lines will line up with 4a, 8a, 12p, 4p, 8p.
         lv_chart_set_div_line_count(temperature_chart, 3, 5);
 
@@ -110,13 +139,18 @@ namespace redstone
 
         // The y-axis range
         lv_chart_set_range(temperature_chart, 60, 80);
+
+        // Set the color of line on the chart
         temperature_ser = lv_chart_add_series(temperature_chart, lv_color_hex3(0xC00));
 
         // The count of 4 will actually place 3 minor tick marks between two major tick marks
         lv_chart_set_x_tick_texts(temperature_chart, TICKS_X_AXIS, 4, LV_CHART_AXIS_DRAW_LAST_TICK);
 
         // The count of 5 will actually place 4 minor tick marks between two major tick marks
-        lv_chart_set_y_tick_texts(temperature_chart, TICKS_Y_AXIS, 5, LV_CHART_AXIS_DRAW_LAST_TICK | LV_CHART_AXIS_INVERSE_LABELS_ORDER);
+        lv_chart_set_y_tick_texts(temperature_chart,
+        TICKS_Y_AXIS,
+        5,
+        LV_CHART_AXIS_DRAW_LAST_TICK | LV_CHART_AXIS_INVERSE_LABELS_ORDER);
     }
 
     // A published EnvirValue event
@@ -132,15 +166,15 @@ namespace redstone
         int16_t minute = event.get_minute();
         int16_t second = event.get_second();
 
-        if ( (hour == 23) && (minute == 59) && (second >= 55))
+        if ((hour == 23) && (minute == 59) && (second >= 55))
         {
             clear_chart();
         }
 
-        if ( (current_hour != hour) && (minute == 0) )
+        if ((current_hour != hour) && (minute == 0))
         {
             current_hour = hour;
-            update_chart(); 
+            update_chart();
         }
     }
 

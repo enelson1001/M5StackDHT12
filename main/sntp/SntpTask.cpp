@@ -18,9 +18,7 @@
 #include <ctime>
 #include <smooth/core/network/Wifi.h>
 #include <smooth/core/ipc/Publisher.h>
-
 #include "sntp/SntpTask.h"
-#include "sntp/WifiSsidPasswd.h"
 
 using namespace std::chrono;
 using namespace smooth::core;
@@ -53,13 +51,6 @@ namespace redstone
         tzset();
 
         sntp.start();
-        Log::info(TAG, "Starting wifi...");
-
-        network::Wifi& wifi = app.get_wifi();
-        wifi.set_host_name("M5Stack-DHT12");
-        wifi.set_auto_connect(true);
-        wifi.set_ap_credentials(WIFI_SSID, WIFI_PASSWORD);
-        wifi.connect_to_ap();
     }
 
     // The task tick event happens every 1 seconds

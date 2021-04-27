@@ -3,7 +3,8 @@
 
 # This line must be the first line in the CMakeLists.txt file. 
 # ESP-IDF is designed to work with CMake 3.5 or newer.
-cmake_minimum_required(VERSION 3.10)
+#cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.13.0)
 
 # Use -std=c++17 
 set(CMAKE_CXX_STANDARD 17)

@@ -26,6 +26,7 @@ namespace redstone
 {
     // Class constants
     static const char* TAG = "Dht12Task";
+    static const float T_COMP_CELSIUS = 5.2;           // temperature compenstation for DHT12 in M5Base
 
     // Constructor
     Dht12Task::Dht12Task() :
@@ -82,7 +83,7 @@ namespace redstone
             float temperature, humidity;
             sensor->read_measurements(humidity, temperature);
 
-            envir_value.set_temperture_degree_C(temperature);
+            envir_value.set_temperture_degree_C(temperature - T_COMP_CELSIUS);
             envir_value.set_relative_humidity(humidity);
 
             Publisher<EnvirValue>::publish(envir_value);

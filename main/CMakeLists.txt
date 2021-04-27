@@ -4,6 +4,9 @@
 # variables set above) to the build. A library with the name of the 
 # component will be built and linked into the final app. If this step 
 # is skipped, this component will not be part of the build.
+cmake_minimum_required(VERSION 3.13.0)
+
+set(CMAKE_CXX_STANDARD 17)
 
 include(${CMAKE_CURRENT_LIST_DIR}/files.cmake)
 

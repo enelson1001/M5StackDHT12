@@ -2,6 +2,7 @@
  * CPHourlyLog.h - A content pane that displays a temperature chart
  *
  * Created on Jan. 04, 2020
+ * Modified on March 02, 2021 - Updated to lvgl v7.10
  * Copyright (c) 2019 Ed Nelson (https://github.com/enelson1001)
  * Licensed under MIT License (see LICENSE file)
  *
@@ -67,9 +68,11 @@ namespace redstone
             using SubQTimeValue = smooth::core::ipc::SubscribingTaskEventQueue<TimeValue>;
             std::shared_ptr<SubQTimeValue> subr_queue_time_value;
 
+            lv_style_t plain_style;
             lv_style_t content_container_style;
-            lv_style_t temperature_chart_style;
-            lv_style_t temperature_style;
+            lv_style_t chart_bg_style;
+            lv_style_t series_bg_style;
+            lv_style_t series_style;
 
             lv_obj_t* content_container;
             lv_obj_t* temperature_chart;

@@ -19,22 +19,22 @@
 // Typical output on M5Stack
 //
 //  MemStat: Mem type |  8-bit free | Smallest block | Minimum free | 32-bit free | Smallest block | Minimum free
-//  MemStat: INTERNAL |      107868 |         107220 |        78956 |      158244 |         107220 |       129324
-//  MemStat:      DMA |      107868 |         107220 |        78956 |      107868 |         107220 |        78956
+//  MemStat: INTERNAL |       68460 |          32768 |        14428 |       96552 |          32768 |        42508
+//  MemStat:      DMA |       68460 |          32768 |        14428 |       68460 |          32768 |        14428
 //  MemStat:   SPIRAM |           0 |              0 |            0 |           0 |              0 |            0
 //  MemStat:
 //  MemStat:             Name |      Stack |  Min free stack |  Max used stack
-//  MemStat:         LvglTask |       4096 |             492 |            3604
-//  MemStat:        Dht12Task |       3300 |             936 |            2364
-//  MemStat:         SntpTask |       3200 |             768 |            2432
-//  MemStat: SocketDispatcher |      20480 |           18028 |            2452
-//  MemStat:         MainTask |      16384 |           12380 |            4004
+//  MemStat:        Dht12Task |       3300 |             736 |            2564
+//  MemStat:         MainTask |      16384 |           12060 |            4324
+//  MemStat:         SntpTask |       3200 |             700 |            2500
+//  MemStat: SocketDispatcher |      20480 |           18036 |            2444
+//  MemStat:         LvglTask |       4096 |             364 |            3732
 //
-// Esp32-IDF version: v4.0-beta2
-// Toolchain version: xtensa-esp32-elf-gcc (crosstool-NG esp32-2019r1) 8.2.0
-// Lvgl version: v6.1.2 - SHA1: 2ed4959
-// Smooth version: master SHA1: b4bf80b4
-// Bin file size: 1,240,336 bytes
+// Esp32-IDF version: v4.3-beta3 - commit e9cf9e2 - April 14, 2021
+// Toolchain version: esp-2020r3-8.4.0/xtensa-esp32-elf
+// Lvgl version:  v7.11.0 - commit: ec9de51, March, 2021
+// Smooth version: master - commit: 5578b8b, April 15, 2021
+// Bin file size: 1,529,728 bytes
 //******************************************************************************************************************
 #include "App.h"
 #include <chrono>
@@ -45,6 +45,9 @@
 
 using namespace smooth::core;
 using namespace std::chrono;
+using namespace smooth::core::io::spi;
+using namespace smooth::core::filesystem;
+using namespace smooth::application::sensor;
 
 namespace redstone
 {
@@ -52,7 +55,10 @@ namespace redstone
     static const char* TAG = "APP";
 
     // Constructor
-    App::App() : Application(APPLICATION_BASE_PRIO, seconds(60)), sntp_task(*this)
+    App::App() : Application(APPLICATION_BASE_PRIO, seconds(20)),
+            wifi(*this),
+
+            sntp_task(*this)
     {
     }
 
@@ -61,9 +67,26 @@ namespace redstone
     {
         Log::warning(TAG, "============ Starting APP  ===========");
         Application::init();
-        sntp_task.start();
         lvgl_task.start();
+
+        // allow lvgl task time to initialize the spi bus
+        std::this_thread::sleep_for(seconds{ 2 });
+
+        // initialize sdcard
+        data_store.init();
+
+        // allow sdcard to be initialized
+        std::this_thread::sleep_for(seconds{ 3 });
+        wifi.set_wifi_cred(data_store.read_nth_line("wifi_cred.txt", 0), data_store.read_nth_line("wifi_cred.txt", 1));
+        wifi.start_wifi();
         dht12_task.start();
+        sntp_task.start();
+
+        // allow time for wifi to connect
+        std::this_thread::sleep_for(seconds{ 10 });
+        wifi.show_network_info();
+        wifi.show_local_mac_address();
+        wifi.show_wifi_information();
     }
 
     // Tick event happens every 60 seconds

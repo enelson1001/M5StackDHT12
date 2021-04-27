@@ -3,6 +3,7 @@
  * heat index in a table
  *
  * Created on Jan. 04, 2020
+ * Modified on March 02, 2021 - Updated to lvgl to v7.10
  * Copyright (c) 2019 Ed Nelson (https://github.com/enelson1001)
  * Licensed under MIT License (see LICENSE file)
  *
@@ -44,37 +45,63 @@ namespace redstone
     {
         Log::info(TAG, "Creating CPTable");
 
-        // create style for the content container
-        lv_style_copy(&content_container_style, &lv_style_plain);
-        content_container_style.body.main_color = lv_color_hex3(0xaaa);
-        content_container_style.body.grad_color = lv_color_hex3(0xaaa);
+        // create a plain style
+        lv_style_init(&plain_style);
+        lv_style_set_pad_top(&plain_style, LV_STATE_DEFAULT, 0);
+        lv_style_set_pad_bottom(&plain_style, LV_STATE_DEFAULT, 0);
+        lv_style_set_pad_left(&plain_style, LV_STATE_DEFAULT, 0);
+        lv_style_set_pad_right(&plain_style, LV_STATE_DEFAULT, 0);
+        lv_style_set_line_opa(&plain_style, LV_STATE_DEFAULT, 0);
+        lv_style_set_pad_inner(&plain_style, LV_STATE_DEFAULT, 0);
+        lv_style_set_margin_all(&plain_style, LV_STATE_DEFAULT, 0);
+        lv_style_set_border_width(&plain_style, LV_STATE_DEFAULT, 0);
+        lv_style_set_radius(&plain_style, LV_STATE_DEFAULT, 0);
 
-        // create style for cell
-        lv_style_copy(&cell_style, &lv_style_plain);
-        cell_style.body.border.width = 1;
-        cell_style.body.border.color = LV_COLOR_BLACK;
-        cell_style.text.color = LV_COLOR_BLACK;
+        // create a style for the content container
+        // set background color to blue same as title pane and menu pane
+        lv_style_copy(&content_container_style, &plain_style);
+        lv_style_set_bg_color(&content_container_style, LV_STATE_DEFAULT, lv_color_hex3(0x036));
 
-        // create style for header cells
-        lv_style_copy(&header_style, &lv_style_plain);
-        header_style.body.border.width = 1;
-        header_style.body.border.color = LV_COLOR_BLACK;
-        header_style.body.main_color = lv_color_hex3(0xff9);
-        header_style.body.grad_color = lv_color_hex3(0xff9);
-        header_style.text.color = LV_COLOR_BLACK;
+        // create a table style
+        // set border width to 3 pixels
+        // set border color to red
+        lv_style_copy(&table_style, &plain_style);
+        lv_style_set_border_width(&table_style, LV_STATE_DEFAULT, 3);
+        lv_style_set_border_color(&table_style, LV_STATE_DEFAULT, LV_COLOR_RED);
+
+        // create a style for cells
+        // set padding to 4 pixels to all sides
+        // set font to size 18
+        // set font color to black
+        // set background color of table to cyan
+        // set background opa to cover so it covers the content container background color
+        lv_style_copy(&cell_style, &table_style);
+        lv_style_set_pad_top(&cell_style, LV_STATE_DEFAULT, 4);
+        lv_style_set_pad_bottom(&cell_style, LV_STATE_DEFAULT, 4);
+        lv_style_set_pad_left(&cell_style, LV_STATE_DEFAULT, 4);
+        lv_style_set_pad_right( &cell_style, LV_STATE_DEFAULT, 4);
+        lv_style_set_text_font(&cell_style, LV_STATE_DEFAULT, &lv_font_montserrat_18);
+        lv_style_set_text_color(&cell_style, LV_STATE_DEFAULT, LV_COLOR_BLACK);
+        lv_style_set_bg_color(&cell_style, LV_STATE_DEFAULT, LV_COLOR_CYAN);
+        lv_style_set_bg_opa(&cell_style, LV_STATE_DEFAULT, LV_OPA_COVER);
+
+        // create a style for header cells
+        // set backgound color of header cell to light yellow
+        lv_style_copy(&header_style, &cell_style);
+        lv_style_set_bg_color(&header_style, LV_STATE_DEFAULT, lv_color_hex3(0xff9));
 
         // create a content container
         content_container = lv_cont_create(lv_scr_act(), NULL);
         lv_obj_set_size(content_container, width, height);
         lv_obj_align(content_container, NULL, LV_ALIGN_CENTER, 0, 0);
-        lv_cont_set_style(content_container, LV_CONT_STYLE_MAIN, &content_container_style);
+        lv_obj_add_style(content_container, LV_CONT_PART_MAIN, &content_container_style);
         lv_obj_set_hidden(content_container, true);
 
-        // create table
+        // create the table
         table = lv_table_create(content_container, NULL);
-        lv_table_set_style(table, LV_TABLE_STYLE_CELL1, &cell_style);
-        lv_table_set_style(table, LV_TABLE_STYLE_CELL2, &header_style);
-        lv_table_set_style(table, LV_TABLE_STYLE_BG, &lv_style_transp_tight);
+        lv_obj_add_style(table, LV_TABLE_PART_BG, &table_style);
+        lv_obj_add_style(table, LV_TABLE_PART_CELL1, &cell_style);
+        lv_obj_add_style(table, LV_TABLE_PART_CELL2, &header_style);
         lv_table_set_col_width(table, 0, 150);
         lv_table_set_col_cnt(table, 2);
         lv_table_set_row_cnt(table, 5);

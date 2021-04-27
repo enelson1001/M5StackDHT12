@@ -2,6 +2,7 @@
  * CPTimeAndDate.h - A content pane that displays time and date
  *
  * Created on Dec. 03, 2019
+ * Modified on March 02, 2021 - Updated to lvgl to v7.10
  * Copyright (c) 2019 Ed Nelson (https://github.com/enelson1001)
  * Licensed under MIT License (see LICENSE file)
  *
@@ -58,7 +59,9 @@ namespace redstone
             using SubQTimeValue = smooth::core::ipc::SubscribingTaskEventQueue<TimeValue>;
             std::shared_ptr<SubQTimeValue> subr_queue_time_value;
 
+            lv_style_t plain_style;
             lv_style_t content_container_style;
+            lv_style_t label_style;
             lv_obj_t* content_container;
             lv_obj_t* time_value_label;
             lv_obj_t* date_value_label;

@@ -65,7 +65,7 @@ namespace redstone
 
             std::unordered_map<ViewID, std::unique_ptr<IPane>> content_panes;
             std::unordered_map<ViewID, std::unique_ptr<IPane>> title_panes;
-            ViewID current_view_id{ HourlyLog };
-            ViewID new_view_id{ HourlyLog };
+            ViewID current_view_id{ Measurements };
+            ViewID new_view_id{ Measurements };
     };
 }

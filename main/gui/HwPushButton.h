@@ -17,6 +17,9 @@
 #pragma once
 
 #include <smooth/core/io/Input.h>
+#include <smooth/core/logging/log.h>
+
+using namespace smooth::core::logging;
 
 namespace redstone
 {
@@ -24,15 +27,22 @@ namespace redstone
     {
         public:
             /// Constructor
-            HwPushButton(gpio_num_t pin, bool pullup, bool pulldn) : hw_btn(pin, pullup, pulldn) {}
+            HwPushButton(gpio_num_t pin, bool pullup, bool pulldn) : pin(pin), hw_btn(pin, pullup, pulldn) {}
 
             /// Is button pressed
             bool is_button_pressed()
             {
+                if (!hw_btn.read())
+                {
+                    Log::verbose("HwPushButton", "HW Button {} is pressed", pin);
+                }
+                
                 return !hw_btn.read();
             }
 
         private:
+            gpio_num_t pin;
             smooth::core::io::Input hw_btn;
+            
     };
 }

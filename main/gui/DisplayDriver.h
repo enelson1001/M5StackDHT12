@@ -2,6 +2,7 @@
  * DisplayDriver.h - A LittlevGL Display Driver for ILI9341 - Resolution: 240×320
  *
  * Created on Jan. 04, 2020
+ * Modified on March 02, 2021 - Updated to latest Smooth
  * Copyright (c) 2019 Ed Nelson (https://github.com/enelson1001)
  * Licensed under MIT License (see LICENSE file)
  *
@@ -18,7 +19,7 @@
 
 #include <lvgl/lvgl.h>
 #include <smooth/application/display/ILI9341.h>
-#include <smooth/application/display/DisplaySpi.h>
+#include <smooth/application/display/LCDSpi.h>
 #include <smooth/core/io/spi/SpiDmaFixedBuffer.h>
 
 namespace redstone
@@ -43,7 +44,7 @@ namespace redstone
             void display_drv_flush(lv_disp_drv_t* drv, const lv_area_t* area, lv_color_t* color_map);
 
             /// Initialize the lcd display driver IC
-            bool init_display();
+            bool init_lcd_display();
 
             // Set the screen rotation
             void set_screen_rotation();
@@ -63,11 +64,9 @@ namespace redstone
             static constexpr int LINES_TO_SEND = 40;                                            // See Note 2
             static constexpr int MAX_DMA_LEN = (LV_HOR_RES_MAX * LINES_TO_SEND * COLOR_SIZE);   // See Note 3
 
-            spi_host_device_t spi_host;
-            smooth::core::io::spi::Master spi_master;
+            std::unique_ptr<smooth::application::display::LCDSpi> lcd_display{};
 
-            std::unique_ptr<smooth::application::display::DisplaySpi> display{};
-            bool display_initialized{ false };
+            bool lcd_display_initialized{ false };
 
             smooth::core::io::spi::SpiDmaFixedBuffer<uint8_t, MAX_DMA_LEN> video_display_buffer1{};
             lv_color1_t* vdb1;

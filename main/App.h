@@ -20,6 +20,8 @@
 #include "sntp/SntpTask.h"
 #include "gui/LvglTask.h"
 #include "model/Dht12Task.h"
+#include "storage/DataStore.h"
+#include "network/Wifi.h"
 
 namespace redstone
 {
@@ -33,8 +35,10 @@ namespace redstone
             void tick() override;
 
         private:
+            DataStore data_store;
+            Wifi wifi;
+            SntpTask sntp_task;
             LvglTask lvgl_task{};
             Dht12Task dht12_task{};
-            SntpTask sntp_task;
     };
 }

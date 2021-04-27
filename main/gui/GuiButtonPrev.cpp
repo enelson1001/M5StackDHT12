@@ -2,6 +2,7 @@
  * GuiButtonPrev.h - A class that creates a PREV gui button
  *
  * Created on Jan. 04, 2020
+ * Modified on March 02, 2021 - Updated to lvgl to v7.10, moved button style to GuiButton class
  * Copyright (c) 2019 Ed Nelson (https://github.com/enelson1001)
  * Licensed under MIT License (see LICENSE file)
  *
@@ -32,24 +33,21 @@ namespace redstone
     // Create the PREV button
     lv_obj_t* GuiButtonPrev::create(lv_obj_t* parent)
     {
+        // create style for button
+        create_button_style();
+
         // create the button
         lv_obj_t* btn = create_btn(parent);
-
-        // sets the GuiButton callback to call this on_clicked function
-        btn->user_data = this;
-
-        // create style for button label
-        lv_style_copy(&gui_btn_style, &lv_style_plain);
-        gui_btn_style.text.font = &lv_font_roboto_12;
-        gui_btn_style.text.color = LV_COLOR_WHITE;
-
-        // set the size of the button
         lv_obj_set_size(btn, 60, 24);
+        lv_obj_reset_style_list(btn, LV_BTN_PART_MAIN);
+        lv_obj_add_style(btn, LV_BTN_PART_MAIN, &gui_btn_style);
 
         // set the text for the button label
         lv_obj_t* label = lv_label_create(btn, NULL);
-        lv_obj_set_style(label, &gui_btn_style);
         lv_label_set_text(label, "PREV");
+
+        // sets the GuiButton callback to call this on_clicked function
+        btn->user_data = this;
 
         return btn;
     }

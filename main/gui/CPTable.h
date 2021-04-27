@@ -3,6 +3,7 @@
  * heat index in a table
  *
  * Created on Jan. 04, 2020
+ * Modified on March 02, 2021 - Updated to lvgl to v7.10
  * Copyright (c) 2019 Ed Nelson (https://github.com/enelson1001)
  * Licensed under MIT License (see LICENSE file)
  *
@@ -55,7 +56,9 @@ namespace redstone
             using SubQEnvirValue = smooth::core::ipc::SubscribingTaskEventQueue<EnvirValue>;
             std::shared_ptr<SubQEnvirValue> subr_queue_envir_value;
 
+            lv_style_t plain_style;
             lv_style_t content_container_style;
+            lv_style_t table_style;
             lv_style_t cell_style;
             lv_style_t header_style;
 
