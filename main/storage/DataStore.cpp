@@ -75,6 +75,13 @@ namespace redstone
             }
 
             std::getline(file_in, line);
+
+            // if text file was created on Windows we need to remove the carriage return character that is at the end of
+            // the line
+            if (line.size() && line[line.size() - 1] == '\r')
+            {
+                line = line.substr( 0, line.size() - 1 );
+            }
         }
 
         return line;

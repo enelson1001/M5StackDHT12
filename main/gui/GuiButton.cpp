@@ -22,6 +22,7 @@ namespace redstone
     // Constructor
     GuiButton::GuiButton()
     {
+        create_button_style();
     }
 
     // The button callback for events

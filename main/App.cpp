@@ -19,22 +19,22 @@
 // Typical output on M5Stack
 //
 //  MemStat: Mem type |  8-bit free | Smallest block | Minimum free | 32-bit free | Smallest block | Minimum free
-//  MemStat: INTERNAL |       68460 |          32768 |        14428 |       96552 |          32768 |        42508
-//  MemStat:      DMA |       68460 |          32768 |        14428 |       68460 |          32768 |        14428
+//  MemStat: INTERNAL |       68588 |          32768 |        12728 |       96680 |          32768 |        40808
+//  MemStat:      DMA |       68596 |          32768 |        12728 |       68596 |          32768 |        12728
 //  MemStat:   SPIRAM |           0 |              0 |            0 |           0 |              0 |            0
 //  MemStat:
 //  MemStat:             Name |      Stack |  Min free stack |  Max used stack
-//  MemStat:        Dht12Task |       3300 |             736 |            2564
+//  MemStat:        Dht12Task |       3300 |             744 |            2556
 //  MemStat:         MainTask |      16384 |           12060 |            4324
-//  MemStat:         SntpTask |       3200 |             700 |            2500
-//  MemStat: SocketDispatcher |      20480 |           18036 |            2444
-//  MemStat:         LvglTask |       4096 |             364 |            3732
+//  MemStat:         SntpTask |       3200 |             924 |            2276
+//  MemStat: SocketDispatcher |      20480 |           17900 |            2580
+//  MemStat:         LvglTask |       4096 |             356 |            3740
 //
 // Esp32-IDF version: v4.3-beta3 - commit e9cf9e2 - April 14, 2021
 // Toolchain version: esp-2020r3-8.4.0/xtensa-esp32-elf
 // Lvgl version:  v7.11.0 - commit: ec9de51, March, 2021
 // Smooth version: master - commit: 5578b8b, April 15, 2021
-// Bin file size: 1,529,728 bytes
+// Bin file size: 1,516,992  bytes
 //******************************************************************************************************************
 #include "App.h"
 #include <chrono>

@@ -33,9 +33,6 @@ namespace redstone
     // Create the PREV button
     lv_obj_t* GuiButtonPrev::create(lv_obj_t* parent)
     {
-        // create style for button
-        create_button_style();
-
         // create the button
         lv_obj_t* btn = create_btn(parent);
         lv_obj_set_size(btn, 60, 24);
